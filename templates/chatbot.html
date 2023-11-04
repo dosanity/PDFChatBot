@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html> 
+   <head> 
+      <link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
+      <link href='https://fonts.googleapis.com/css?family=Arimo' rel='stylesheet' type='text/css'>
+      <link href='https://fonts.googleapis.com/css?family=Hind:300' rel='stylesheet' type='text/css'>
+      <link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
+      <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+      <title>Chatbot</title> 
+   </head> 
+   <body> 
+      <div class="centered">
+         <form action = "/chatbot", method="POST">
+            <div class ="container">
+               <h1>PDF Chat Bot</h1>
+               <input type="text" name="user_input" placeholder="Ask about the PDF" required="required"/>
+               <button type="submit" class="btn btn-primary btn-block btn-large">SUBMIT</button>
+            </div>
+
+         </form>
+         <form action = "/">   
+            <button type="submit" class="btn btn-primary btn-block btn-large">UPLOAD AGAIN</button>
+         </form> 
+         <div class="centered-text">
+            <div class="text-box">
+               {{ prediction_text }}
+            </div>
+         </div>
+
+      </div>
+
+      
+      <footer>
+         <br>
+         <div class="footer-bottom">
+            <p class='m-0 text-center text-white' id='copyright'></p>
+         </div>
+      </footer>
+      
+      
+   </body> 
+</html>
