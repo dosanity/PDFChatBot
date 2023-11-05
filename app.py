@@ -35,11 +35,12 @@ def success():
             # Use the custom path along with the original file name
             f.save(f.filename)
             
-            return render_template("chatbot.html", name=f.filename)
+            return render_template("chatbot.html", name=f.filename, history=history, conversation=conversation)
         else:
             return render_template("index.html", error_text="Only PDF files are allowed for upload.")
 
-
+history = {}
+conversation = {}
 @app.route('/chatbot', methods=['GET', 'POST'])  
 
 def pdf():
@@ -47,9 +48,16 @@ def pdf():
     chat = load_db(loaded_file,"stuff", 4)
     user_input = request.form['user_input']
     result = chat({"question": user_input})
-    return render_template('chatbot.html', prediction_text=str(result['answer']))
-    # return render_template('chatbot.html')
+    answer_text = str(result['answer'])
+    question_text = str(result['question'])
+    user = "User: "
+    chat = "Chat Bot: "
+    conversation.update({user: question_text, chat: answer_text})
+    history.update({question_text : answer_text})
+    return render_template('chatbot.html', answer_text=answer_text, question_text=question_text, history = history, conversation = conversation)
+    return render_template('chatbot.html')
   
 if __name__ == '__main__':   
     app.run(debug=True)
+
 

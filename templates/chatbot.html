@@ -6,6 +6,7 @@
       <link href='https://fonts.googleapis.com/css?family=Hind:300' rel='stylesheet' type='text/css'>
       <link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
       <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+      <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
       <title>Chatbot</title> 
    </head> 
    <body> 
@@ -13,21 +14,86 @@
          <form action = "/chatbot", method="POST">
             <div class ="container">
                <h1>PDF Chat Bot</h1>
-               <input type="text" name="user_input" placeholder="Ask about the PDF" required="required"/>
-               <button type="submit" class="btn btn-primary btn-block btn-large">SUBMIT</button>
+               <input class="input" type="text" name="user_input" placeholder="Ask about the PDF" required="required"/>
+               <button type="submit" class="btn btn-primary btn-block btn-large">SUBMIT<span class="spinner"></span></button>
             </div>
 
          </form>
          <form action = "/">   
             <button type="submit" class="btn btn-primary btn-block btn-large">UPLOAD AGAIN</button>
          </form> 
-         <div class="centered-text">
+         <!-- <div class="centered-text">
             <div class="text-box">
                {{ prediction_text }}
             </div>
-         </div>
+         </div> -->
 
       </div>
+      <main>
+      
+      <input class="tabs" id="tab1" type="radio" name="tabs" checked>
+      <label for="tab1">Conversation</label>
+         
+      <input class="tabs" id="tab2" type="radio" name="tabs">
+      <label for="tab2">Chat History</label>
+         
+      <section id="content1">
+         <br>
+         <table>
+            <thead>
+              <tr>
+                <th></th>
+                <th style="width:80%"></th>
+              </tr>
+            </thead>
+            <tbody>
+               {% for key, value in conversation.items() %}
+               <tr>
+                 <td><b>{{ key }} &nbsp&nbsp</b></td>
+                 <td>{{ value }}</td>
+               </tr>
+               <tr>
+                 <td><b>&nbsp&nbsp</b></td>
+                 <td>&nbsp&nbsp</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+      </section>
+         
+      <section id="content2">
+         <br>
+         <table>
+            <thead>
+              <tr>
+                <th></th>
+                <th style="width:80%"></th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for key, value in history.items() %}
+             <tr>
+               <td><b>User: &nbsp&nbsp</b></td>
+               <td>{{ key }} </td>
+             </tr>
+             <tr>
+               <td><b>&nbsp&nbsp</b></td>
+               <td>&nbsp&nbsp</td>
+            </tr>
+             <tr>
+               <td><b>Chat Bot: &nbsp&nbsp</b></td>
+               <td>{{ value }} </td>
+            </tr>
+            <tr>
+               <td><b>&nbsp&nbsp</b></td>
+               <td>&nbsp&nbsp</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+      </section>
+         
+      </main>
 
       
       <footer>
