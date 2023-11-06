@@ -7,9 +7,6 @@ from pdf_reader import load_db
 
 
 app = Flask(__name__)   
-  
-# importing function for calculations
-from basic_calculator_function import basic_calculator
 
 # Define calculator
 @app.route('/')
