@@ -82,7 +82,9 @@ button {
 	border: none;
 	outline: none;
 	padding: 10px;
-	font-size: 15px;
+	font-size: 16px;
+	cursor: pointer;
+	font-family: -apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto;
 	/* color: #fff; */
 	/* border: 1px solid rgba(0,0,0,0.3); */
 	border-radius: 4px;
@@ -93,8 +95,12 @@ button {
 	-ms-transition: box-shadow .5s ease;
 	transition: box-shadow .5s ease;
 }
-.input:hover {
+.input[type='file']:hover {
 	cursor: pointer;
+}
+
+.text:hover {
+	cursor: text;
 }
 
 button:hover {
@@ -201,7 +207,7 @@ label[for*='2']:before {
 }
 
 label[for*='3']:before {
-  content: '\f16b';
+  content: '\f144';
 }
 
 label[for*='4']:before {
