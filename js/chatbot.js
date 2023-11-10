@@ -1,4 +1,5 @@
-$('form').submit(function(){
-    $('#waiting').show();
-    $(this).children('input[type=submit]').prop('disabled', true);
-   });
+const theButton = document.querySelector(".button");
+
+theButton.addEventListener("click", () => {
+    theButton.classList.addClass("button--loading");
+});
