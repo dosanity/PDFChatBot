@@ -40,7 +40,7 @@ def success():
             history = {}
             conversation = {}
             global summary
-            summary_result = summ({"question": "Can you summarize in detail?"})
+            summary_result = summ({"question": "Can you summarize the information in detail?"})
             summary = str(summary_result['answer'])
 
             
