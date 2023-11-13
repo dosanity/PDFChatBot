@@ -7,3 +7,8 @@ Many people avoid reading long PDFs and contracts. With the help of Generative A
 + Programming Languages: Python, Javascript, HTML, CSS
 + Scraping Software: VS Code 1.71.0
 + Dependencies: LangChain, OpenAI, flask
+
+## Website Results
+<img width="930" alt="web1" src="https://github.com/dosanity/pdf-reader/assets/29410712/d88b9bb6-961c-456c-966b-ef39659e9fca">
+<img width="1920" alt="web2" src="https://github.com/dosanity/pdf-reader/assets/29410712/30c0e610-e648-4c35-969f-27a24b011634">
+<img width="1920" alt="web3" src="https://github.com/dosanity/pdf-reader/assets/29410712/ffcb2bcc-5fd7-4533-a416-78a906be3c90">
