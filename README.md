@@ -4,7 +4,7 @@ Many people avoid reading long PDFs and contracts. With the help of Generative A
 
 ## Resources
 + Analysis Software: `Jupyter Notebook 6.4.12`, `VS Code 1.71.0`
-+ Programming Languages: `Python 3.10`
++ Programming Languages: `Python 3.10`, `JavaScript 1.5`, `HTML5`, `CSS`
 + Frameworks: `LangChain 0.0.336`, `Flask 3.0.0`
 + Embeddings: `Open AI 1.3.0`
 
