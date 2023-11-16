@@ -4,7 +4,7 @@ from flask import *
 import pdf_reader
 from pdf_reader import load_db, load_db_sum
 from langchain.memory import ConversationBufferMemory
-
+from werkzeug.exceptions import InternalServerError
 
 
 app = Flask(__name__, static_folder='static')   
@@ -25,17 +25,18 @@ def home():
 def success():
     if request.method == 'POST':
         f = request.files['file']
+        api_key = request.form['api_key']
 
         # Check if the file has a ".pdf" file extension
-        if f.filename.endswith(".pdf"):
+        if f.filename.endswith(".pdf") and api_key != "":
             f.filename = "upload.pdf"
             global file
             file = f.filename
             # Use the custom path along with the original file name
             f.save(f.filename)
             global chat
-            chat = load_db(file)
-            summ = load_db_sum(file)
+            chat = load_db(file, api_key)
+            summ = load_db_sum(file, api_key)
             global history
             history = {}
             conversation = {}
@@ -45,8 +46,10 @@ def success():
 
             
             return render_template("chatbot.html", name=f.filename, history=history, conversation=conversation, summary=summary)
-        else:
+        elif f.filename.endswith(".pdf") == False:
             return render_template("index.html", error_text="Only PDF files are allowed for upload.")
+        elif api_key == "":
+            return render_template("index.html", error_text="Please enter your OpenAI API key.")
 
 history = {}
 conversation = {}
@@ -63,6 +66,9 @@ def pdf():
     history.update({question_text : answer_text})
     return render_template('chatbot.html', answer_text=answer_text, question_text=question_text, history = history, conversation = conversation, summary = summary)
     
+@app.errorhandler(InternalServerError)
+def handle_internal_server_error(e):
+    return render_template("index.html", error_text="The API key you entered was invalid, please enter your OpenAI API key.")
 
 if __name__ == '__main__':   
     app.run(debug=True)

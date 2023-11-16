@@ -10,21 +10,18 @@ from langchain.document_loaders import TextLoader
 from langchain.document_loaders import PyPDFLoader
 from langchain.vectorstores import Chroma
 from langchain.prompts import PromptTemplate
-import panel as pn
 import param
-
+from flask import *  
 import os
 import openai
 import sys
 sys.path.append('../..')
 
-import panel as pn  # GUI
-pn.extension()
+# from dotenv import load_dotenv, find_dotenv
+# _ = load_dotenv(find_dotenv()) # read local .env file
 
-from dotenv import load_dotenv, find_dotenv
-_ = load_dotenv(find_dotenv()) # read local .env file
 
-openai.api_key  = os.environ['OPENAI_API_KEY']
+
 
 import datetime
 current_date = datetime.datetime.now().date()
@@ -33,7 +30,8 @@ if current_date < datetime.date(2023, 9, 2):
 else:
     llm_name = "gpt-3.5-turbo"
 
-def load_db(file):
+def load_db(file, api_key):
+    os.environ['OPENAI_API_KEY'] = api_key
     # load documents
     loader = PyPDFLoader(file)
     documents = loader.load()
@@ -77,7 +75,8 @@ def load_db(file):
     )
     return qa 
 
-def load_db_sum(file):
+def load_db_sum(file, api_key):
+    os.environ['OPENAI_API_KEY'] = api_key
     # load documents
     loader = PyPDFLoader(file)
     documents = loader.load()
