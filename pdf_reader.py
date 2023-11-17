@@ -8,8 +8,8 @@ from langchain.memory import ConversationBufferMemory
 from langchain.chat_models import ChatOpenAI
 from langchain.document_loaders import TextLoader
 from langchain.document_loaders import PyPDFLoader
-from langchain.vectorstores import Chroma
 from langchain.prompts import PromptTemplate
+from langchain.llms import OpenAI
 import tiktoken
 from flask import *  
 import os
@@ -81,7 +81,7 @@ def load_db_sum(file, api_key):
     loader = PyPDFLoader(file)
     documents = loader.load()
     # split documents
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=150)
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=4000, chunk_overlap=150)
     docs = text_splitter.split_documents(documents)
     # create string of documents
     str_docs = str(documents)
@@ -109,16 +109,18 @@ def load_db_sum(file, api_key):
     # create a chatbot chain.
 
     if num_tokens < model_max_tokens:
-        chain = load_summarize_chain(llm=ChatOpenAI(model_name=llm_name, temperature=0), chain_type="stuff")
+        chain = load_summarize_chain(llm=OpenAI(temperature=0, model="text-davinci-003", openai_api_key=api_key), chain_type="stuff")
         qa = chain.run(documents)
     else:
-        chain = ConversationalRetrievalChain.from_llm(
-            llm=ChatOpenAI(model_name=llm_name, temperature=0), 
-            chain_type="stuff", 
-            retriever=retriever,
-            # combine_docs_chain_kwargs={"prompt": prompt_doc},
-            memory=memory
-        )
-        summary_result = chain({"question": "Can you summarize the information in detail?"})
-        qa = str(summary_result['answer'])
+        chain = load_summarize_chain(llm=OpenAI(temperature=0, model="text-davinci-003", openai_api_key=api_key), chain_type="map_reduce")
+        qa = chain.run(documents)
+        # chain = ConversationalRetrievalChain.from_llm(
+        #     llm=ChatOpenAI(model_name=llm_name, temperature=0), 
+        #     chain_type="stuff", 
+        #     retriever=retriever,
+        #     # combine_docs_chain_kwargs={"prompt": prompt_doc},
+        #     memory=memory
+        # )
+        # summary_result = chain({"question": "Can you summarize the information in detail?"})
+        # qa = str(summary_result['answer'])
     return qa 
