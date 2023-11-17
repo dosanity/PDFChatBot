@@ -36,13 +36,13 @@ def success():
             f.save(f.filename)
             global chat
             chat = load_db(file, api_key)
-            summ = load_db_sum(file, api_key)
+            global summary
+            summary = load_db_sum(file, api_key)
             global history
             history = {}
             conversation = {}
-            global summary
-            summary_result = summ({"question": "Can you summarize the information in detail?"})
-            summary = str(summary_result['answer'])
+            # summary_result = summ({"question": "Can you summarize the information in detail?"})
+            # summary = str(summary_result['answer'])
 
             
             return render_template("chatbot.html", name=f.filename, history=history, conversation=conversation, summary=summary)
