@@ -13,15 +13,8 @@ from langchain.llms import OpenAI
 import tiktoken
 from flask import *  
 import os
-import openai
 import sys
 sys.path.append('../..')
-
-# from dotenv import load_dotenv, find_dotenv
-# _ = load_dotenv(find_dotenv()) # read local .env file
-
-
-
 
 import datetime
 current_date = datetime.datetime.now().date()
@@ -42,8 +35,8 @@ def load_db(file, api_key):
     embeddings = OpenAIEmbeddings()
     # create vector database from data
     db = DocArrayInMemorySearch.from_documents(docs, embeddings)
-    # retriever = db.as_retriever()
     
+    # add in the prompt
     prompt_template_doc = """
 
     Use the following pieces of context to answer the question at the end. {context}
@@ -59,13 +52,13 @@ def load_db(file, api_key):
     )
     # define retriever
     retriever = db.as_retriever(search_type="similarity", search_kwargs={"k": 4})
-    #Keeps a buffer of history and process it
+    # keeps a buffer of history and process it
     memory = ConversationBufferMemory(
         memory_key="chat_history",
         output_key="answer",
         return_messages=True
     )
-    # create a chatbot chain. Memory is managed externally.
+    # create a chatbot chain
     qa = ConversationalRetrievalChain.from_llm(
         llm=ChatOpenAI(model_name=llm_name, temperature=0), 
         chain_type="stuff", 
@@ -86,6 +79,7 @@ def load_db_sum(file, api_key):
     # create string of documents
     str_docs = str(documents)
 
+    # define number of tokens from text
     def num_tokens_from_string(string: str, encoding_name: str) -> int:    
         encoding = tiktoken.encoding_for_model(encoding_name)
         num_tokens = len(encoding.encode(string))
@@ -106,21 +100,13 @@ def load_db_sum(file, api_key):
         output_key="answer",
         return_messages=True
     )
-    # create a chatbot chain.
 
+    # create a chatbot chain based on tokens
     if num_tokens < model_max_tokens:
         chain = load_summarize_chain(llm=OpenAI(temperature=0, model="text-davinci-003", openai_api_key=api_key), chain_type="stuff")
         qa = chain.run(documents)
     else:
         chain = load_summarize_chain(llm=OpenAI(temperature=0, model="text-davinci-003", openai_api_key=api_key), chain_type="map_reduce")
         qa = chain.run(documents)
-        # chain = ConversationalRetrievalChain.from_llm(
-        #     llm=ChatOpenAI(model_name=llm_name, temperature=0), 
-        #     chain_type="stuff", 
-        #     retriever=retriever,
-        #     # combine_docs_chain_kwargs={"prompt": prompt_doc},
-        #     memory=memory
-        # )
-        # summary_result = chain({"question": "Can you summarize the information in detail?"})
-        # qa = str(summary_result['answer'])
+
     return qa 

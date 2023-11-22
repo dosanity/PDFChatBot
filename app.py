@@ -4,7 +4,7 @@ from flask import *
 import pdf_reader
 from pdf_reader import load_db, load_db_sum
 from langchain.memory import ConversationBufferMemory
-from werkzeug.exceptions import InternalServerError
+from werkzeug.exceptions import InternalServerError, BadRequest, MethodNotAllowed
 
 
 app = Flask(__name__, static_folder='static')   
@@ -34,16 +34,19 @@ def success():
             file = f.filename
             # Use the custom path along with the original file name
             f.save(f.filename)
+
+            # create a global variable for the chat
             global chat
             chat = load_db(file, api_key)
+
+            # create a global variable for the summary
             global summary
             summary = load_db_sum(file, api_key)
+
+            # create a global variable for the history
             global history
             history = {}
             conversation = {}
-            # summary_result = summ({"question": "Can you summarize the information in detail?"})
-            # summary = str(summary_result['answer'])
-
             
             return render_template("chatbot.html", name=f.filename, history=history, conversation=conversation, summary=summary)
         elif f.filename.endswith(".pdf") == False:
@@ -66,9 +69,20 @@ def pdf():
     history.update({question_text : answer_text})
     return render_template('chatbot.html', answer_text=answer_text, question_text=question_text, history = history, conversation = conversation, summary = summary)
     
+# Internal Server Error reroute
 @app.errorhandler(InternalServerError)
 def handle_internal_server_error(e):
     return render_template("index.html", error_text="The API key you entered was invalid, please enter your OpenAI API key.")
+
+# Bad Request Error reroute
+@app.errorhandler(BadRequest)
+def handle_bad_reqeust_error(e):
+    return render_template("index.html")
+
+# Method Not Allowed Error reroute
+@app.errorhandler(MethodNotAllowed)
+def handle_bad_reqeust_error(e):
+    return render_template("index.html")
 
 if __name__ == '__main__':   
     app.run(debug=True)
